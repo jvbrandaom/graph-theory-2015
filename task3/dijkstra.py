@@ -9,9 +9,6 @@ def dijkstra(G, source):
         G.node[v]['lambda'] = float('inf')
         G.node[v]['predecessor'] = None
 
-        #Lambda[node] = np.inf
-        #predecessor[node] = None
-
     #Init sources with 0
     if (type(source) is int):
         G.node[source]['lambda'] = 0
