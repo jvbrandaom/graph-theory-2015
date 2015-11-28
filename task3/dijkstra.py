@@ -37,5 +37,9 @@ def dijkstra(G, source):
         if G.node[v]['predecessor'] is u or G.node[u]['predecessor'] is v:
             new_graph.add_edge(u, v, data)
 
-    return new_graph
+    predecessors = {}
+    for v in G.nodes():
+        predecessors[v] = G.node[v]['predecessor']
+
+    return new_graph, predecessors
 
