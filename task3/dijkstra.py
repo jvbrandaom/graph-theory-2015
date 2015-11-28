@@ -2,6 +2,13 @@ import networkx as nx
 
 
 def dijkstra(G, source):
+    '''
+
+    :param G: a NetworkX graph
+    :param source: source node of Dijkstra algorithm or list of source nodes
+    :return: new_graph, predecessors
+             shortest-path tree and list of predecessors
+    '''
     queue = G.nodes() #priority queue
 
     #Init other nodes
