@@ -20,11 +20,11 @@ O grafo foi retirado deste [repositório de datasets](http://toreopsahl.com/data
 
  Para obter as sementes, escolhemos vértices da periferia do grafo. O resultado é o seguinte:
 
-<img src="img/two_sources" alt=""/>
+<img src="img/two_sources.png" alt=""/>
 
 ### b) Resultado obtido para 3 agrupamentos com sementes escolhidas aletoriamente
 
-<img src="img/three_sources" alt=""/>
+<img src="img/three_sources.png" alt=""/>
 
 ### c) Repetir o item b)
 
