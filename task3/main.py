@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import networkx as nx
 import random
 import matplotlib.pyplot as plt
 from dijkstra import *
