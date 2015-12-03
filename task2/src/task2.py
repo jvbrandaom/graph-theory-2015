@@ -1,31 +1,53 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# TODO: Keep Prim-ing
-
-# Comandos em python para leitura de um grafo a partir de uma matriz de
-# adjacencia gravada em arquivo texto
 
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 import os
 import platform
+import random
 
-def prim(g):
-    """ O Algoritmo de Prim retorna uma MST que é iniciada em um nó aleatório
-        A árvore cresce um vértice por vez, em consequência, um nó por vez tal que esse vértice é a vértice de menor
-            peso dos nós visitados para os nós não visitados.
+def mst_prim(g):
+    """
+        O algoritmo de Prim inicia em um nó aleatório e adiciona arestas de menor custo que sai do conjunto de nós
+            visitados e chega no conjunto de nós não visitados.
+    :param g: Um grafo com peso nas arestas
+    :return mst: Uma árvore geradora mínima (MST)
     """
     mst = nx.Graph()
-    visited = []
-    import random
-    random_node = g.nodes()[random.randint(0,len(g.nodes()))]
-    mst.add_node(random_node)
-    visited.append(random_node)
-    print
+    nodes = g.nodes()
+    visited_node = []
+    possible_nodes = []
+    selected_node = nodes[random.randint(0, len(nodes)-1)]
+    mst.add_node(selected_node)
+    neighbors = nx.DiGraph()
 
-def comunidades():
+    while len(mst.nodes()) < len(g.nodes()):
+        visited_node.append(selected_node)
+
+        neighbors.add_node(selected_node)
+        new_edges = [edge for edge in g.edges(selected_node, 'weight') if edge[1] not in visited_node]
+        neighbors.add_weighted_edges_from(new_edges)
+
+        # Processo para obtenção da aresta de menor peso
+        lightest = neighbors.edges(data='weight')[0]
+        for edge in neighbors.edges(data='weight'):
+            if edge[2] < lightest[2]:
+                lightest = edge
+
+        mst.add_weighted_edges_from([lightest])
+        selected_node = lightest[1]
+
+        remove_edges = [i for i in neighbors.edges() if i[1] == selected_node]
+        neighbors.remove_edges_from(remove_edges)
+
+    return mst
+
+def mst_community_remove_edges():
+    # Comandos em python para leitura de um grafo a partir de uma matriz de
+    # adjacencia gravada em arquivo texto
     # Resolve o caminho absoluto
     abs_path = os.path.abspath("sgb128_dist.txt")
     pre_path = abs_path[:-(len("sgb128_dist.txt") + 4)]
@@ -45,7 +67,7 @@ def comunidades():
         a = np.loadtxt(dataset_dist)
         labels = np.loadtxt(dataset_name, dtype=basestring, delimiter='\n')
 
-        # Obtem as coordenadas em que o peso eh nao-nulo
+        # Obtem as coordenadas em que o peso eh nao-nulo (diagonal principal)
         rows, cols= np.where(a > 0)
 
         # Obtem o peso de cada uma das arestas
@@ -54,22 +76,15 @@ def comunidades():
         # Cria lista de arestas com e sem peso
         edges_with_weight = zip(rows.tolist(), cols.tolist(), weight)
 
-        # Cria um grafo vazio usando NetworkX
+        # Cria um grafo vazio usando a biblioteca NetworkX
         g = nx.Graph()
 
-        # Insere primeiro os vértices nomeados
-        set_edges = set(rows.tolist())
-        for i in range(0,len(set_edges)):
-            g.add_node(i, name=labels.tolist()[i])
-
-        # Insere arestas
-        g.add_weighted_edges_from(edges_with_weight)
-        # Linka os nomes com seus respectivos vertices
+        # Insert nodes from an edge and it's weight
+        for i in range(0, len(rows)):
+            g.add_edge(edges_with_weight[i][0], edges_with_weight[i][1], weight=edges_with_weight[i][2])
 
         # Executa o algoritmo de Prim para extrair a MST do grafo
-        edge_list = nx.generate_edgelist(g,data=['weight'])
-        mst = prim(g)
-        mst = nx.kruskal_mst(g)
+        mst = mst_prim(g)
 
         # Plota resultados, é necessário que seja salvo na mão.
         # Opção de layout de grafo usado foi o Fruchterman & Reingold
@@ -85,14 +100,13 @@ def comunidades():
 
         # Função que ordena inversamente pelo peso, por causa da função lambda utilizada
         edges_by_weight = sorted([(i,j,mst.edge[i][j]['weight']) for i,j in mst.edges()], key=lambda a:a[2], reverse=True)
-        print edges_by_weight
         name_counter = 0
         # Remoção das arestas com maior peso para a detecção de comunidades
         # Press "e" to exit
 
         print "'Enter' para remover uma aresta, 'e' para passar para o próximo grafo, ou sair do programa no último grafo"
         while raw_input() != "e":
-            print "Removendo a aresta de maior peso!!!!!!!!!!!"
+            print "Removendo a aresta de maior peso!"
 
             # Remoção efetiva da aresta que possui o maior peso
             mst.remove_edge(edges_by_weight[0][0], edges_by_weight[0][1])
@@ -105,6 +119,5 @@ def comunidades():
             plt.show()
             name_counter += 1
 
-if '__name__' == '__main__':
-    #comunidades()
-    print prim()
+if __name__ == "__main__":
+    mst_community_remove_edges()

@@ -6,7 +6,7 @@ TODO: responder as perguntas
 O programa deve, a partir de um tabuleiro de SUDOKU, criar um grafo de incompatibilidade através 
 das regras do jogo. Considere a seguinte instância do jogo:
 
-![sudoku](.readme-img/Sudoku.png)
+<img src="img/Sudoku.png" alt=""/>
 
 A regra básica do jogo é: preencha os números de forma que não haja repetição na mesma linha, 
 coluna ou quadradinho (3 x 3).
