@@ -1,84 +1,50 @@
-T5c: Solução computacional do SUDOKU com algoritmos de coloração em grafos (Sudoku problem solver)
-==================================================================================================
-
-TODO: responder as perguntas
-
-O programa deve, a partir de um tabuleiro de SUDOKU, criar um grafo de incompatibilidade através 
-das regras do jogo. Considere a seguinte instância do jogo:
-
-<img src="img/Sudoku.png" alt=""/>
-
-A regra básica do jogo é: preencha os números de forma que não haja repetição na mesma linha, 
-coluna ou quadradinho (3 x 3).
-
+T4 - Opção a): O Problema do Caixeiro Viajante
+O programa deve ler um grafo Hamiltoniano ponderado a partir de um arquivo qualquer e através de um algoritmo visto em sala (2-otimal ou Twice-Around) obter 10 soluções diferentes para o problema do caixeiro-viajante.
 
 METODOLOGIA
 
-Em outras palavras, o modelo a ser gerado é um grafo G com 81 vértices (quadrado 9 x 9), um 
-para cada casa do tabuleiro. Cada célula do tabuleiro deve ser nomeada como um vértice, 
-percorrendo o tabuleiro linha a linha (v1, v2, v3,..., v81). A partir do grafo nulo inicial 
-(apenas vértices), arestas devem ser adicionadas da seguinte forma:
+Para obter soluções distintas para o problema há algumas heurísticas comumente adotadas na prática: utilizar diferentes inicializações, ou seja, soluções iniciais. Elas podem ser geradas simplesmente aleatoriamente (selecionando vértices quaisquer) ou utilizando alguma heurística, como por exemplo a escolha do vizinho mais próximo por exemplo. Dessa forma, escolhe-se aleatoriamente apenas o primeiro vértice do ciclo (v0) e depois sempre é escolhido como próximo elemento da sequência o vizinho mais próximo do vértice atual, até que o ciclo Hamiltoniano seja formado (não sobre mais vértices). 
 
-<ol type="i">
-    <li>Se um vértice vi pertence a mesma linha que um vértice diferente vj 
-        então a aresta (vi, vj) deve ser adicionada a G
-    </li>
-    <li>Se um vértice vi pertence a mesma coluna que um vértice diferente vj 
-        então a aresta (vi, vj) deve ser adicionada a G
-    </li>
-    <li>Se um vértice vi pertence ao mesmo quadrado (3 x 3) que um vértice diferente 
-        vj então a aresta (vi, vj) deve ser adicionada a G
-    </li>
-</ol>
-
-Logo após a geração do grafo, a pré-coloração inicial (dada pelos quadradinhos já preenchidos 
-do tabuleiro) deve ser realizada. Por exemplo, no caso ilustrado pela figura acima, as cores 
-dos vértices da primeira linha serão: v1 = 9, v2 = 5, v6 = 1, v9 = 8. De posse do grafo e da 
-pré-coloração inicial, o objetivo do trabalho consiste em desenvolver um solucionador automático 
-para esse jogo utilizando o algoritmo para coloração de vértices conhecido como Welsh & Powell. 
-Note que a pré-coloração faz com que as listas iniciais de possíveis cores dos vértices do grafo 
-sejam diferentes. Na prática, para um vértice vi, devemos inicialmente remover de sua lista todas 
-as cores encontradas em seus vizinhos. A heurística a ser adotada consiste em começar a colorir 
-os vértices cujas listas de cores são as menores possíveis, pois assim praticamente não há dúvidas 
-sobre a cor que devem receber. Por exemplo, se inicialmente um vértice possui uma lista de cores 
-com apenas 1 cor, devemos iniciar por ele pois só há obrigatoriamente uma opção válida. Se em algum 
-momento a lista de um vértice se esvazia ou tem apenas cores já assumidas pelos vizinhos, então 
-não há solução válida por esse caminho e possivelmente para o tabuleiro em questão. Em geral, 
-nesses casos é necessário aumentar a pré-coloração inicial, isto é, preencher mais 
-quadrados inicialmente.
-
+OBS: Em caso de implementação do algoritmo Twice-Around utilize alguma função presente na biblioteca NetworkX para a geração de circuitos Eulerianos (que implemente o algoritmo de Fleury ou uma variante). Isso facilita significativamente o desenvolvimento.
 
 QUESTIONAMENTOS
 
-<ol type="a">
-    <li>
-        O que podemos dizer sobre os graus do grafo G resultante?
-    </li>
-    <li>
-        Utilizando o tabuleiro acima, obtenha uma solução aplicando 
-        o algoritmo de Welsh & Powell.
-    </li>
-    <li>
-        Reaplique o algoritmo mais três vezes e compare as 4 soluções obtidas. 
-        São iguais ou diferentes?
-    </li>
-    <li>
-        Ainda considerando o tabuleiro acima, note que inicialmente existem 
-        45 valores iniciais. Remova 2 valores quaisquer de cada linha (18 no total), 
-        totalizando 27 células preenchidas. Execute o método. 
-        Foi possível obter uma solução válida? 
-        Compare a solução com as obtidas anteriormente.
-    </li>
-    <li>
-        O que acontece se a pré-coloração inicial tiver apenas 9 valores (1 por linha)?
-    </li>
-</ol>
-
-Pense em estratégias/heurísticas que podem auxiliar no processo de coloração. 
-Em [http://rachacuca.com.br/logica/sudoku/](http://rachacuca.com.br/logica/sudoku/) 
-você pode encontrar algumas.
+Liste as 3 melhores soluções e as 3 piores obtidas. Qual a diferença de custo entre a melhor e a pior? Discuta como a diferença pode ser significativa.
 
 
-INDO ALÉM
+Considere o grafo a seguir de 30 vértices (HA30). 
+<img src="img/ha30.png" alt=""/>
 
-Pesquise na internet sobre o jogo, mais precisamente, sobre o unicidade da solução em termos do número mínimo de elementos preenchidos iniciais. Em outras palavras, será que existe um número mínimo de quadradinhos que precisam ser preenchidos inicialmente para garantir que o jogo possui solução e ela seja a única possível?
+Foi implementado algoritmo Twice-Around-the-Tree, ou apenas Twice-Around, com uma implementação própria do algoritmo de Prim. Vale a pena ressaltar que o algoritmo do Twice-Around pode ser descrito da seguinte forma:
+    1- Extrair a Árvore Geradora Mínima do grafo G (Prim ou Kruskal, foi utilizado o algoritmo de Prim)
+    2-
+        a- Duplicar as arestas para a extração do ciclo euleriano de origem aleatória
+        b- Aplicação de um algoritmo de extração de um ciclo euleriano
+    3- Remover os vértices repetidos do caminho.
+    
+Abaixo temos o resultado de 10 soluções aleatorizadas.
+
+Caminho: [27, 29, 13, 8, 28, 14, 3, 1, 5, 10, 23, 2, 21, 12, 0, 16, 19, 7, 26, 11, 24, 9, 18, 15, 20, 25, 4, 22, 6, 17]
+Peso: 806.0
+Caminho: [1, 5, 10, 23, 2, 21, 12, 0, 16, 19, 7, 26, 11, 24, 9, 18, 15, 20, 25, 4, 22, 6, 17, 3, 27, 29, 13, 8, 28, 14]
+Peso: 806.0
+Caminho: [14, 28, 8, 13, 27, 29, 3, 1, 5, 10, 23, 2, 21, 12, 0, 16, 19, 7, 26, 11, 24, 9, 18, 15, 20, 25, 4, 22, 6, 17]
+Peso: 806.0
+Caminho: [5, 10, 23, 2, 21, 12, 0, 16, 19, 7, 26, 11, 24, 9, 18, 15, 20, 25, 4, 22, 6, 17, 1, 3, 27, 29, 13, 8, 28, 14]
+Peso: 806.0
+Caminho: [11, 26, 7, 19, 16, 0, 12, 21, 2, 23, 10, 5, 1, 3, 27, 29, 13, 8, 28, 14, 17, 18, 15, 20, 25, 4, 22, 6, 24, 9]
+Peso: 806.0
+Caminho: [5, 10, 23, 2, 21, 12, 0, 16, 19, 7, 26, 11, 24, 9, 18, 15, 20, 25, 4, 22, 6, 17, 1, 3, 27, 29, 13, 8, 28, 14]
+Peso: 806.0
+Caminho: [7, 26, 11, 24, 9, 19, 16, 0, 12, 21, 2, 23, 10, 5, 1, 3, 27, 29, 13, 8, 28, 14, 17, 18, 15, 20, 25, 4, 22, 6]
+Peso: 806.0
+Caminho: [10, 23, 2, 21, 12, 0, 16, 19, 7, 26, 11, 24, 9, 18, 15, 20, 25, 4, 22, 6, 17, 5, 1, 3, 27, 29, 13, 8, 28, 14]
+Peso: 806.0
+Caminho: [24, 26, 7, 19, 16, 0, 12, 21, 2, 23, 10, 5, 1, 3, 27, 29, 13, 8, 28, 14, 17, 18, 15, 20, 25, 4, 22, 6, 11, 9]
+Peso: 806.0
+Caminho: [27, 29, 13, 8, 28, 14, 3, 1, 5, 10, 23, 2, 21, 12, 0, 16, 19, 7, 26, 11, 24, 9, 18, 15, 20, 25, 4, 22, 6, 17]
+Peso: 806.0
+
+É possível notar que os caminhos são na sua maioria diferentes, devido ao método de randomização ter escolhido múltiplas vezes o nó 5 e o nó 27 para começar o caminho.
+Também é notável e curioso que os pesos de todos os caminhos sejam iguais, e isso se dá pelo motivo de que o algoritmo de Prim considera a menor aresta dos nós descobertos para os nós que são possíveis de se chegar. E por isso a Árvore Geradora Mínima foi a mesma e os valores são os mesmos.
+Para que os valores sejam diferentes, é imperioso utilizar um outro método para a extração das MST.
