@@ -1,78 +1,57 @@
-T2: Simulando a detecção de comunidades em redes através de MST's (classificação não supervisionada)
-====================================================================================================
+# T2: Árvores geradoras mínimas e comunidades
+Cada grupo deve escolher um dataset específico (grafo ponderado armazenado em arquivo .gml, .graphml, .txt, .net, etc) e implementar o algoritmo de Prim para extrair uma Minimum Spanning Tree (MST) de G.
 
-O programa deve ler um grafo ponderado de arquivo (txt, graphml, gml, ...) e a partir de um algoritmo para 
-encontrar uma Minimum Spanning Tree (Kruskal ou Prim), o objetivo consiste em encontrar grupos ou "comunidades" 
-no grafo de modo a agrupar regiões similares.
+## METODOLOGIA
 
-###METODOLOGIA
----------------
+Após a implementação do algoritmo e a extração da MST, a forma mais trivial de obter grupos ou comunidades de nós consiste em isolar conjuntos de vértices através da remoção de arestas da MST. Para isso, nesse trabalho utilizaremos 2 critérios distintos:
 
-A identificação dos grupos ou comunidades será realizada da seguinte forma: primeiramente computa-se 
-uma MST do grafo G = (V, E) em questão. De posse da MST, a forma mais trivial de obter grupos ou comunidades 
-consiste em isolar conjuntos de vértices através da remoção de arestas da MST. Neste trabalho, o critério a ser 
-utilizado é a remoção da maior aresta da MST no caso de 2 grupos. Para obter 3 grupos, deve-se remover as 
-2 maiores arestas da MST e assim sucessivamente de modo que para se obter K grupos deve-se remover as 
-K-1 maiores arestas da MST.
+a) remover as k-1 maiores arestas da árvore para gerar k agrupamentos
+b) utilizar a medida conhecida de corte abaixo como critério de seleção da aresta a ser removida. Deve ser removida a aresta que maximiza a seguinte medida:
 
-OBS: Em todos os casos nesse projeto, as matrizes de adjacência representam grafos completos.
+w(A,B) x min{ Na, Nb }
 
-###QUESTIONAMENTOS
-------------------
+onde w(A,B) é o peso da aresta que liga os vértices A e B, Na é o número de vértices no grupo A e Nb é o número de vértices no grupo B (pois qualquer aresta removida de uma árvore gerará exatamente 2 grupos, A e B)
 
-<ol type="a" start="1">
-    <li>Considerando o grafo a seguir de 12 vértices, mostre os resultados obtidos para:</li>
-    <ol type="i">
-        <li>2 grupos</li>
-        <li>3 grupos</li>
-    </ol>
-</ol>
 
-<img src=".readme-img/uk12_xy.png" alt="" />
+## QUESTIONAMENTOS
 
-[Matriz de adjacência com as distâncias entre os pontos para o grafo de 12 vértices]
-(http://people.sc.fsu.edu/~jburkardt/datasets/cities/uk12_dist.txt)
+1) Obtenha as comunidades resultantes em cada caso:
+a) utilize o critério a) com K = 2 e K = 5
+b) utilize o critério b) para obter 2 comunidades
+c) utilize o critério b) para obter 5 comunidades
 
-[Nomes dos vértices (cidades da Inglaterra)]
-(http://people.sc.fsu.edu/~jburkardt/datasets/cities/uk12_name.txt)
+## RESPOSTAS
 
-<ol type="a" start="2">
-    <li>Considerando o grafo a seguir de 59 vértices, mostre os resultados obtidos para:</li>
-    <ol type="i">
-        <li>3 grupos</li>
-        <li>4 grupos</li>
-    </ol>
-</ol>
+1-a)
+Foram utilizados 3 datasets: uk12, wg59 e sgb128. A seguir Veremos os grafos originais, a remoção de arestas de K=2 e em seguida de K=5
 
-<img src=".readme-img/wg59_xy.png" alt="" />
+Dataset UK12 original
+<img src="src/uk12.png" alt=""/>
 
-[Matriz de adjacência com as distâncias entre os pontos para o grafo de 59 vértices]
-(http://people.sc.fsu.edu/~jburkardt/datasets/cities/wg59_dist.txt)
-[Nomes dos vértices (cidades da Alemanha)](http://people.sc.fsu.edu/~jburkardt/datasets/cities/wg59_name.txt)
+Critério de remoção K=2
+<img src="src/uk12_img0.png" alt=""/>
 
-<ol type="a" start="3">
-    <li>Considerando o grafo a seguir de 128 vértices, mostre os resultados obtidos para:</li>
-    <ol type="i">
-        <li>4 grupos</li>
-        <li>5 grupos</li>
-    </ol>
-</ol>
+Critério de remoção K=5
+<img src="img/uk12_img3.png" alt=""/>
 
-<img src=".readme-img/sgb128_xy.png" alt="" />
+Dataset WG59 original
+<img src="src/wg59.png" alt=""/>
 
-[Matriz de adjacência com as distâncias entre os pontos para o grafo de 128 vértices]
-(http://people.sc.fsu.edu/~jburkardt/datasets/cities/sgb128_dist.txt)
-[Nomes dos vértices (cidades dos EUA)]
-(http://people.sc.fsu.edu/~jburkardt/datasets/cities/sgb128_name.txt)
+Critério de remoção K=2
+<img src="src/wg59_img0.png" alt=""/>
 
-####OBS: 
+Critério de remoção K=5
+<img src="img/wg59_img3.png" alt=""/>
 
-* Utilize alguma ferramenta para plotar os grupos como conjunto de árvores em cada caso de modo que 
-seja possível visualizar o resultado obtido.
+Dataset SGB128 original
+<img src="src/sgb128.png" alt=""/>
 
-* Para leitura de matrizes de adjacência gravadas em arquivo texto os comandos em Python do script a seguir mostram 
-como montar uma lista de arestas a partir do arquivo .txt: 
-[Lendo matrizes de adjacência com Python](http://www.moodle.ufscar.br/file.php/1619/Projetos/le_matriz_adjacencia.txt), 
-Numpy e NetworkX ou 
-[http://stackoverflow.com/questions/15283803/read-in-matrix-from-file-make-edgelist-and-write-edgelist-to-file]
-(http://stackoverflow.com/questions/15283803/read-in-matrix-from-file-make-edgelist-and-write-edgelist-to-file)
+Critério de remoção K=2
+<img src="src/sgb128_img0.png" alt=""/>
+
+Critério de remoção K=5
+<img src="img/sgb128_img3.png" alt=""/>
+
+1-b)
+
+1-c)
